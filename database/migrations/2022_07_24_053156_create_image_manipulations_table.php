@@ -21,8 +21,8 @@ return new class extends Migration
             $table->text('data');
             $table->string('output_path', 255)->nullable();
             $table->timestamp('created_at')->nullable();
-            $table->foreignIdFor(\App\Models\User::class,'user_id')->nullable();
-            $table->foreignIdFor(\App\Models\Album::class,'album_id')->nullable();
+            $table->foreignIdFor(\App\Models\User::class)->nullable();
+            $table->foreignIdFor(\App\Models\Album::class)->nullable();
         });
     }
 
