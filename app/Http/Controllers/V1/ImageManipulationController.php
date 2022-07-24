@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\ResizeImageRequest;
 use App\Http\Requests\UpdateImageManipulationRequest;
 use App\Http\Resources\V1\ImageManipulationResource;
+use App\Models\Album;
 use App\Models\ImageManipulation;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\File;
@@ -22,11 +23,16 @@ class ImageManipulationController extends Controller
      */
     public function index()
     {
-        //
+        return ImageManipulationResource::Collection(ImageManipulation::paginate());
     }
 
     public function byAlbum(Album $album)
     {
+        $where = [
+            'album_id' => $album->id,
+        ];
+
+        return ImageManipulationResource::Collection(ImageManipulation::where($where)->paginate());
 
     }
 
@@ -97,23 +103,24 @@ class ImageManipulationController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\ImageManipulation  $imageManipulation
+     * @param  \App\Models\ImageManipulation  $image
      * @return \Illuminate\Http\Response
      */
-    public function show(ImageManipulation $imageManipulation)
+    public function show(ImageManipulation $image)
     {
-        //
+        return new ImageManipulationResource($image);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\ImageManipulation  $imageManipulation
+     * @param  \App\Models\ImageManipulation  $image
      * @return \Illuminate\Http\Response
      */
-    public function destroy(ImageManipulation $imageManipulation)
+    public function destroy(ImageManipulation $image)
     {
-        //
+        $image->delete();
+        return response('', 204);
     }
 
     protected function getImageWidthAndHeight(mixed $w, mixed $h, string $originalPath)
